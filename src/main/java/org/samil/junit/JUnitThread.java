@@ -4,9 +4,11 @@ import org.dojo.calculator.StringCalculatorTest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
+import org.mdkt.compiler.CompilationError;
 import org.mdkt.compiler.CustomInMemoryJavaCompiler;
 import org.samil.Katas;
 
+import javax.tools.Diagnostic;
 import java.security.AccessControlException;
 
 public class JUnitThread implements Runnable {
@@ -39,12 +41,12 @@ public class JUnitThread implements Runnable {
             JUnitCore junit = clz.newInstance();
             Result result = junit.run(kata.getTestClass());
             boolean triedToHack = false;
-            if(result.wasSuccessful()){
+            if (result.wasSuccessful()) {
                 message = "All tests pass!";
-            }else {
+            } else {
                 for (Failure failure : result.getFailures()) {
-                    if(failure.getException() instanceof AccessControlException){
-                       triedToHack = true;
+                    if (failure.getException() instanceof AccessControlException) {
+                        triedToHack = true;
                         continue;
                     }
                     System.out.println(failure.toString());
@@ -52,7 +54,18 @@ public class JUnitThread implements Runnable {
 
                 message = triedToHack ? "Don't try to hack!" : "There are some errors";
             }
-        }catch (Exception e) {
+        } catch (CompilationError compilationError) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Code doesn't compile");
+            for (Diagnostic<?> diagnostic : compilationError.getDiagnostics().getDiagnostics()) {
+                sb.append("\n");
+                sb.append("Error on line ");
+                sb.append(diagnostic.getLineNumber());
+                sb.append(" in ");
+                sb.append(diagnostic);
+            }
+            message = sb.toString();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

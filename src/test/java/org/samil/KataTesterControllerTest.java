@@ -71,6 +71,18 @@ public class KataTesterControllerTest {
         // Then
         assertThat(responseEntity.getBody()).isEqualTo("Don't try to hack!");
     }
+    @Test
+    public void shouldNotCompile() throws Exception {
+
+        // Given
+        String fileContent = getFileContent("stringCalculator/dontCompile.txt");
+
+        // When
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://localhost:8080/kata/test/STRINGCALCULATOR", fileContent, String.class);
+
+        // Then
+        assertThat(responseEntity.getBody()).startsWith("Code doesn't compile");
+    }
 
     private String getFileContent(String filename) {
 

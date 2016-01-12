@@ -9,7 +9,7 @@ It exposes a webservice to send code to. It will try to pass test on it (after c
 
 Security is in place to avoid some hacking (almost nothing is possible, file access, system access, ...)
 
-The Kata StringCalculator is implemented. The class sent to the webservice needs to implement IStringCalculator interface and that's it. Postto  the url
+The Kata StringCalculator is implemented. The class sent to the webservice needs to implement IStringCalculator interface and that's it. Post to  the url
 http://localhost:8080/kata/test/STRINGCALCULATOR
 
 To add some katas, you'll need to add the entry in the Katas enum class, an interface with the interesting methods to be called in the test and the actual test.
